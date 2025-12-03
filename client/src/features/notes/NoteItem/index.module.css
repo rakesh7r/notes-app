@@ -1,16 +1,16 @@
 .item {
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .item:hover {
-  background-color: #f3f4f6;
+  background-color: var(--hover-bg);
 }
 
 .item.active {
-  background-color: #e5e7eb;
+  background-color: var(--active-bg);
 }
 
 .header {
@@ -23,7 +23,7 @@
 .title {
   font-weight: 600;
   font-size: 1rem;
-  color: #111827;
+  color: var(--text-color);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -32,12 +32,12 @@
 
 .date {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--secondary-text);
 }
 
 .preview {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--secondary-text);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -47,7 +47,7 @@
 .deleteBtn {
   background: none;
   border: none;
-  color: #ef4444;
+  color: var(--danger-color);
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 0.25rem;
@@ -60,5 +60,5 @@
 }
 
 .deleteBtn:hover {
-  background-color: #fee2e2;
+  background-color: var(--danger-hover);
 }

@@ -1,15 +1,16 @@
 .container {
     width: 300px;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    background-color: #f9fafb;
+    background-color: var(--sidebar-bg);
     height: 100%;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 .header {
     padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,12 +19,12 @@
 .title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-color);
     margin: 0;
 }
 
 .addBtn {
-    background-color: #2563eb;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 0.5rem;
@@ -36,7 +37,7 @@
 }
 
 .addBtn:hover {
-    background-color: #1d4ed8;
+    background-color: var(--primary-hover);
 }
 
 .list {
@@ -47,6 +48,6 @@
 .empty {
     padding: 2rem;
     text-align: center;
-    color: #6b7280;
+    color: var(--secondary-text);
     font-size: 0.875rem;
 }

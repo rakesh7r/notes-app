@@ -1,3 +1,35 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #1a1a1a;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --active-bg: #e5e7eb;
+  --secondary-text: #6b7280;
+  --input-bg: transparent;
+  --sidebar-bg: #f9fafb;
+  --card-bg: #ffffff;
+  --danger-color: #ef4444;
+  --danger-hover: #fee2e2;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+}
+
+[data-theme='dark'] {
+  --bg-color: #1f2937;
+  --text-color: #f9fafb;
+  --border-color: #374151;
+  --hover-bg: #374151;
+  --active-bg: #4b5563;
+  --secondary-text: #9ca3af;
+  --input-bg: transparent;
+  --sidebar-bg: #111827;
+  --card-bg: #1f2937;
+  --danger-color: #f87171;
+  --danger-hover: #7f1d1d;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+}
+
 html,
 body,
 #root {
@@ -5,7 +37,9 @@ body,
   margin: 0;
   padding: 0;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: #1a1a1a;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .app-container {

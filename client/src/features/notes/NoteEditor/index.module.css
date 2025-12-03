@@ -3,8 +3,9 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    background-color: white;
+    background-color: var(--bg-color);
     height: 100%;
+    transition: background-color 0.2s;
 }
 
 .titleInput {
@@ -14,12 +15,12 @@
     outline: none;
     margin-bottom: 1rem;
     width: 100%;
-    color: #111827;
-    background-color: transparent;
+    color: var(--text-color);
+    background-color: var(--input-bg);
 }
 
 .titleInput::placeholder {
-    color: #9ca3af;
+    color: var(--secondary-text);
 }
 
 .contentInput {
@@ -29,13 +30,13 @@
     resize: none;
     font-size: 1rem;
     line-height: 1.5;
-    color: #374151;
+    color: var(--text-color);
     font-family: inherit;
-    background-color: transparent;
+    background-color: var(--input-bg);
 }
 
 .contentInput::placeholder {
-    color: #9ca3af;
+    color: var(--secondary-text);
 }
 
 .emptyState {
@@ -43,7 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: var(--secondary-text);
     font-size: 1.125rem;
-    background-color: #f9fafb;
+    background-color: var(--bg-color);
 }
