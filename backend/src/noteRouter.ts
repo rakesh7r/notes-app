@@ -1,7 +1,10 @@
 import { Router } from "express"
 import { prisma } from "./prisma"
+import { authenticateToken } from "./middleware/authMiddleware"
 
 const noteRouter = Router()
+
+noteRouter.use(authenticateToken)
 
 // Get all notes for a user
 noteRouter.get("/", async (req, res) => {

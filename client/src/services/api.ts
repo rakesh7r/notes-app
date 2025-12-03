@@ -10,6 +10,17 @@ const api = axios.create({
     },
 })
 
+api.interceptors.request.use((config) => {
+    const auth = localStorage.getItem("auth")
+    if (auth) {
+        const { token } = JSON.parse(auth)
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+    }
+    return config
+})
+
 export const fetchNotes = async (email: string): Promise<Note[]> => {
     const response = await api.get(`/?email=${email}`)
     return response.data

@@ -6,11 +6,14 @@ import cors from "cors"
 
 import noteRouter from "./noteRouter"
 
+import { requestLogger } from "./middleware/requestLogger"
+
 const app = express()
 const PORT = process.env.PORT || 4000
 
 app.use(cors())
 app.use(express.json())
+app.use(requestLogger)
 
 app.use("/notes", noteRouter)
 
