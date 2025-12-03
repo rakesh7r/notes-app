@@ -1,9 +1,9 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { addNote, deleteNote } from './notesSlice';
-import { NoteItem } from './NoteItem';
-import styles from './NoteList.module.css';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { addNote, deleteNote } from '../notesSlice';
+import { NoteItem } from '../NoteItem';
+import styles from './index.module.css';
 
 interface NoteListProps {
   selectedNoteId: string | null;

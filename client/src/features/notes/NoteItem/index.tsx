@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
-import { type Note } from './notesSlice';
-import styles from './NoteItem.module.css';
+import { type Note } from '../notesSlice';
+import styles from './index.module.css';
 
 interface NoteItemProps {
   note: Note;

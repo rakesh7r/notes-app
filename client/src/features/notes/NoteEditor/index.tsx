@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { updateNote } from './notesSlice';
-import styles from './NoteEditor.module.css';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { updateNote } from '../notesSlice';
+import styles from './index.module.css';
 
 interface NoteEditorProps {
   noteId: string | null;
