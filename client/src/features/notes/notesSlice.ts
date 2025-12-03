@@ -15,8 +15,9 @@ interface NotesState {
     error: string | null
 }
 
+const savedNotes = localStorage.getItem("notes")
 const initialState: NotesState = {
-    notes: [],
+    notes: savedNotes ? JSON.parse(savedNotes) : [],
     status: "idle",
     error: null,
 }
@@ -28,18 +29,22 @@ export const notesSlice = createSlice({
         setNotes: (state, action: PayloadAction<Note[]>) => {
             state.notes = action.payload
             state.status = "succeeded"
+            localStorage.setItem("notes", JSON.stringify(action.payload))
         },
         addNote: (state, action: PayloadAction<Note>) => {
             state.notes.push(action.payload)
+            localStorage.setItem("notes", JSON.stringify(state.notes))
         },
         updateNote: (state, action: PayloadAction<Note>) => {
             const index = state.notes.findIndex((note) => note.id === action.payload.id)
             if (index !== -1) {
                 state.notes[index] = action.payload
+                localStorage.setItem("notes", JSON.stringify(state.notes))
             }
         },
         deleteNote: (state, action: PayloadAction<string>) => {
             state.notes = state.notes.filter((note) => note.id !== action.payload)
+            localStorage.setItem("notes", JSON.stringify(state.notes))
         },
         setLoading: (state) => {
             state.status = "loading"
