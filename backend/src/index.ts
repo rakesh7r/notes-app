@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+import noteRouter from './noteRouter';
+
 dotenv.config();
 
 const app = express();
@@ -9,6 +11,8 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/notes', noteRouter);
 
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
