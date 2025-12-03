@@ -1,66 +1,56 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
+    id: string
+    title: string
+    content: string
+    createdAt: string
+    updatedAt: string
+    userId: string
 }
 
 interface NotesState {
-  notes: Note[];
+    notes: Note[]
+    status: "idle" | "loading" | "succeeded" | "failed"
+    error: string | null
 }
 
-const loadNotes = (): Note[] => {
-  try {
-    const serializedNotes = localStorage.getItem('notes');
-    if (serializedNotes === null) {
-      return [];
-    }
-    return JSON.parse(serializedNotes);
-  } catch (err) {
-    return [];
-  }
-};
-
 const initialState: NotesState = {
-  notes: loadNotes(),
-};
+    notes: [],
+    status: "idle",
+    error: null,
+}
 
 export const notesSlice = createSlice({
-  name: 'notes',
-  initialState,
-  reducers: {
-    addNote: (state, action: PayloadAction<{ title: string; content: string }>) => {
-      const newNote: Note = {
-        id: uuidv4(),
-        title: action.payload.title,
-        content: action.payload.content,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      state.notes.push(newNote);
-      localStorage.setItem('notes', JSON.stringify(state.notes));
+    name: "notes",
+    initialState,
+    reducers: {
+        setNotes: (state, action: PayloadAction<Note[]>) => {
+            state.notes = action.payload
+            state.status = "succeeded"
+        },
+        addNote: (state, action: PayloadAction<Note>) => {
+            state.notes.push(action.payload)
+        },
+        updateNote: (state, action: PayloadAction<Note>) => {
+            const index = state.notes.findIndex((note) => note.id === action.payload.id)
+            if (index !== -1) {
+                state.notes[index] = action.payload
+            }
+        },
+        deleteNote: (state, action: PayloadAction<string>) => {
+            state.notes = state.notes.filter((note) => note.id !== action.payload)
+        },
+        setLoading: (state) => {
+            state.status = "loading"
+        },
+        setError: (state, action: PayloadAction<string>) => {
+            state.status = "failed"
+            state.error = action.payload
+        },
     },
-    updateNote: (state, action: PayloadAction<{ id: string; title: string; content: string }>) => {
-      const { id, title, content } = action.payload;
-      const existingNote = state.notes.find((note) => note.id === id);
-      if (existingNote) {
-        existingNote.title = title;
-        existingNote.content = content;
-        existingNote.updatedAt = new Date().toISOString();
-        localStorage.setItem('notes', JSON.stringify(state.notes));
-      }
-    },
-    deleteNote: (state, action: PayloadAction<string>) => {
-      state.notes = state.notes.filter((note) => note.id !== action.payload);
-      localStorage.setItem('notes', JSON.stringify(state.notes));
-    },
-  },
-});
+})
 
-export const { addNote, updateNote, deleteNote } = notesSlice.actions;
+export const { setNotes, addNote, updateNote, deleteNote, setLoading, setError } = notesSlice.actions
 
-export default notesSlice.reducer;
+export default notesSlice.reducer

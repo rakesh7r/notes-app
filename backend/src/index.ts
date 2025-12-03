@@ -1,23 +1,23 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import dotenv from "dotenv"
+dotenv.config()
 
-import noteRouter from './noteRouter';
+import express, { Request, Response } from "express"
+import cors from "cors"
 
-dotenv.config();
+import noteRouter from "./noteRouter"
 
-const app = express();
-const PORT = process.env.PORT || 4000;
+const app = express()
+const PORT = process.env.PORT || 4000
 
-app.use(cors());
-app.use(express.json());
+app.use(cors())
+app.use(express.json())
 
-app.use('/notes', noteRouter);
+app.use("/notes", noteRouter)
 
-app.get('/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'ok', message: 'Server is running' });
-});
+app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({ status: "ok", message: "Server is running" })
+})
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    console.log(`Server is running on port ${PORT}`)
+})
