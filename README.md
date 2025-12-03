@@ -7,7 +7,20 @@ This is a robust, offline-first note-taking application designed to ensure data 
 To start the application in production mode using Docker Compose:
 
 ```bash
-podman-compose -f docker-compose.prod.yml up --build
+git clone https://github.com/rakesh7r/notes-app
+cd notes-app
+
+```
+
+```bash
+podman-compose -f docker-compose.prod.yml up
+```
+
+or
+
+```bash
+docker-compose -f docker-compose.prod.yml up
+
 ```
 
 This will spin up the following services:
