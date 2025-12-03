@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
-import { setNotes, addNote, deleteNote } from '../notesSlice';
+import { setNotes, addNote, deleteNote, type Note } from '../notesSlice';
 import { fetchNotes, createNote, deleteNote as deleteNoteApi } from '../../../services/api';
 import { NoteItem } from '../NoteItem';
 import styles from './index.module.css';
@@ -35,13 +35,24 @@ export const NoteList: React.FC<NoteListProps> = ({ selectedNoteId, onSelectNote
 			content: '',
 			id: tempId,
 		};
+		const idempotencyKey = uuidv4();
 
-		await idb.put('documents', { ...newNoteData, id: tempId, userId: user.email }, tempId);
 		try {
 			const createdNote = await createNote(newNoteData, user.email, user.name || 'Unknown');
 			dispatch(addNote(createdNote));
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Failed to create note:', error);
+			if (error.code === 'ERR_NETWORK') {
+				await idb.put(
+					'offline-notes',
+					{
+						action: 'createNote',
+						body: { ...newNoteData, id: tempId, userId: user.email, email: user.email, name: user.name || 'Unknown' },
+					},
+					idempotencyKey
+				);
+				dispatch(addNote({ ...newNoteData, id: tempId, userId: user.email } as Note));
+			}
 		}
 	};
 
@@ -54,8 +65,20 @@ export const NoteList: React.FC<NoteListProps> = ({ selectedNoteId, onSelectNote
 				if (selectedNoteId === id) {
 					onSelectNote('');
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.error('Failed to delete note:', error);
+				const idempotencyKey = uuidv4();
+				if (error?.code === 'ERR_NETWORK') {
+					await idb.put(
+						'offline-notes',
+						{
+							action: 'deleteNote',
+							body: { id },
+						},
+						idempotencyKey
+					);
+					dispatch(deleteNote(id));
+				}
 			}
 		}
 	};

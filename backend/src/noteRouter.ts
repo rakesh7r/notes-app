@@ -29,7 +29,7 @@ noteRouter.get('/', async (req, res) => {
 // Create a note
 noteRouter.post('/', async (req, res) => {
 	const { title, content, email, name, id } = req.body;
-	console.log(id);
+
 	if (!email || !title) {
 		res.status(400).json({ error: 'Email and title are required' });
 		return;
