@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  backend:
+    image: docker.io/rakesh7r/offline-first-notes-backend:latest
+    container_name: backend
+    ports:
+      - '4000:4000'
+    networks:
+      - backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=postgres
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+
+  client:
+    image: docker.io/rakesh7r/offline-first-notes:latest
+    container_name: client
+    ports:
+      - '3000:3000'
+    networks:
+      - backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - VITE_BACKEND_URL=http://localhost:4000
+
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+
+volumes:
+  postgres_data:
+  backend_node_modules:
+  client_node_modules:
+
+networks:
+  backend:
