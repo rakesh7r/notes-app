@@ -56,8 +56,7 @@ export const NoteList: React.FC<NoteListProps> = ({ selectedNoteId, onSelectNote
     }
 
     // Sort notes by updatedAt descending
-    const sortedNotes = notes && notes.length ? notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) : []
-
+    const sortedNotes = notes && notes.length ? [...notes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) : []
     return (
         <div className={styles.container}>
             <div className={styles.header}>
