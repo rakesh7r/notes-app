@@ -2,6 +2,8 @@
 
 This is a robust, offline-first note-taking application designed to ensure data consistency and availability regardless of network status. It features a modern React frontend and a scalable Node.js/Express backend backed by PostgreSQL.
 
+![Architecture Diagram](./arch.png)
+
 ## 🚀 How to Run
 
 To start the application in production mode using Docker Compose:
