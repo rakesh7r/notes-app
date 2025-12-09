@@ -48,10 +48,17 @@ jobs:
         run: pnpm install
 
       - name: Generate Prisma Client
+        env:
+            PORT: ${{ secrets.PORT }}
+            DATABASE_URL: ${{ secrets.DATEBASE_URL }}
         run: pnpm prisma generate
 
       - name: Run tests
         run: pnpm test
 
       - name: Build backend
+        env:
+            PORT: ${{ secrets.PORT }}
+            DATABASE_URL: ${{ secrets.DATEBASE_URL }}
+            VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
         run: pnpm build
