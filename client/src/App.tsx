@@ -24,7 +24,7 @@ function App() {
 	if (!user) {
 		return <Login />;
 	}
-
+	// added dummy string to test github action
 	return (
 		<div className='app-container'>
 			{!isOnline && (
