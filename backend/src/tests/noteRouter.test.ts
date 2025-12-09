@@ -1,6 +1,6 @@
 // Must mock prisma before importing app/router
 import { mockDeep, mockReset } from 'vitest-mock-extended';
-import { PrismaClient } from '../generated/prisma/client';
+import { PrismaClient } from '@/generated/prisma/client';
 
 // 1. Mock the specific module path
 vi.mock('../prisma', () => ({
