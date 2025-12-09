@@ -49,8 +49,8 @@ jobs:
 
       - name: Generate Prisma Client
         env:
-            PORT: ${{ secrets.PORT }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PORT: ${{ secrets.PORT }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm prisma generate
 
       - name: Run tests
@@ -58,7 +58,7 @@ jobs:
 
       - name: Build backend
         env:
-            PORT: ${{ secrets.PORT }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          PORT: ${{ secrets.PORT }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
         run: pnpm build
