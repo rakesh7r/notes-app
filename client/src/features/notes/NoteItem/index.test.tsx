@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { NoteItem } from './index';
-import { Note } from '../notesSlice';
+import type { Note } from '../notesSlice';
 
 const mockNote: Note = {
 	id: '1',

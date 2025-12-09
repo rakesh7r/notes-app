@@ -41,7 +41,7 @@ const mockNotes = [
 	},
 ];
 
-const createTestStore = (preloadedNotes = []) => {
+const createTestStore = (preloadedNotes: any[] = []) => {
 	return configureStore({
 		reducer: {
 			notes: notesReducer,
@@ -58,7 +58,7 @@ const createTestStore = (preloadedNotes = []) => {
 			},
 			notes: {
 				notes: preloadedNotes,
-				status: 'idle',
+				status: 'idle' as const,
 				error: null,
 			},
 		},

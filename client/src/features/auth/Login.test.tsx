@@ -6,7 +6,7 @@ import authReducer from './authSlice';
 
 // Mock dependencies
 vi.mock('@react-oauth/google', () => ({
-	GoogleLogin: ({ onSuccess, onError }: any) => (
+	GoogleLogin: ({ onSuccess }: any) => (
 		<button
 			data-testid='google-login-btn'
 			onClick={() => {
