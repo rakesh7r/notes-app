@@ -9,7 +9,6 @@ vi.mock('../prisma', () => ({
 }));
 
 // Helper to access the mock with typing
-// dummy edit
 export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>;
 
 beforeEach(() => {
