@@ -10,7 +10,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN DATABASE_URL="postgresql://dummy:5432/db" npx prisma generate
+RUN DATABASE_URL="postgresql://dummy:5432/db"
 
 RUN pnpm build
 
