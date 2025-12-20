@@ -1,23 +1,14 @@
-// Must mock prisma before importing app/router
-import { mockDeep, mockReset } from 'vitest-mock-extended';
-import { PrismaClient } from '@/generated/prisma/client';
-
-// 1. Mock the specific module path
-vi.mock('../prisma', () => ({
-	__esModule: true,
-	prisma: mockDeep<PrismaClient>(),
-}));
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
-import { prisma } from '../prisma'; // Import the mocked prisma
 import { app } from '../index';
+import pool from '../db';
 
-const prismaMock = prisma as unknown as ReturnType<typeof mockDeep<PrismaClient>>;
-
-beforeEach(() => {
-	mockReset(prismaMock);
-});
+// Mock the db module
+vi.mock('../db', () => ({
+	default: {
+		query: vi.fn(),
+	},
+}));
 
 // Mock Auth Middleware
 vi.mock('../middleware/authMiddleware', () => ({
@@ -28,6 +19,10 @@ vi.mock('../middleware/authMiddleware', () => ({
 }));
 
 describe('Note Router', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
 	describe('GET /notes', () => {
 		it('should return a list of notes for the user', async () => {
 			const mockNotes = [
@@ -36,21 +31,18 @@ describe('Note Router', () => {
 					title: 'Note 1',
 					content: 'Content 1',
 					userId: 'test@example.com',
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: new Date().toISOString(),
+					updatedAt: new Date().toISOString(),
 				},
 			];
 
-			prismaMock.note.findMany.mockResolvedValue(mockNotes as any);
+			(pool.query as any).mockResolvedValue({ rows: mockNotes });
 
 			const response = await request(app).get('/notes').query({ email: 'test@example.com' });
 
 			expect(response.status).toBe(200);
 			expect(response.body[0].title).toBe('Note 1');
-			expect(prismaMock.note.findMany).toHaveBeenCalledWith({
-				where: { userId: 'test@example.com' },
-				orderBy: { updatedAt: 'desc' },
-			});
+			expect(pool.query).toHaveBeenCalledWith(expect.stringContaining('SELECT * FROM "Note"'), ['test@example.com']);
 		});
 	});
 
@@ -60,35 +52,39 @@ describe('Note Router', () => {
 				title: 'New Note',
 				content: 'New Content',
 				id: 'new-id',
-				email: 'test@example.com', // Required by implementation
+				email: 'test@example.com',
 				name: 'Test User',
 			};
-			const createdNote = { ...newNote, userId: 'test@example.com', createdAt: new Date(), updatedAt: new Date() };
+			const createdNote = {
+				...newNote,
+				userId: 'test@example.com',
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+			};
 
-			prismaMock.user.upsert.mockResolvedValue({} as any);
-			prismaMock.note.create.mockResolvedValue(createdNote as any);
+			// Mock first query (User upsert)
+			(pool.query as any).mockResolvedValueOnce({ rows: [] });
+			// Mock second query (Note insert)
+			(pool.query as any).mockResolvedValueOnce({ rows: [createdNote] });
 
 			const response = await request(app).post('/notes').send(newNote);
 
-			expect(response.status).toBe(200); // Implementation returns 200 (res.json defaults to 200) not 201
+			expect(response.status).toBe(200);
 			expect(response.body.title).toBe('New Note');
-			expect(prismaMock.user.upsert).toHaveBeenCalled();
-			expect(prismaMock.note.create).toHaveBeenCalled();
+			expect(pool.query).toHaveBeenCalledTimes(2);
 		});
 	});
 
 	describe('DELETE /notes/:id', () => {
 		it('should delete a note', async () => {
 			const noteId = '1';
-			prismaMock.note.delete.mockResolvedValue({ id: noteId } as any);
+			(pool.query as any).mockResolvedValue({ rows: [] });
 
 			const response = await request(app).delete(`/notes/${noteId}`);
 
 			expect(response.status).toBe(200);
 			expect(response.body.message).toBe('Note deleted');
-			expect(prismaMock.note.delete).toHaveBeenCalledWith({
-				where: { id: noteId },
-			});
+			expect(pool.query).toHaveBeenCalledWith(expect.stringContaining('DELETE FROM "Note"'), [noteId]);
 		});
 	});
 });

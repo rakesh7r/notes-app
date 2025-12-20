@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { prisma } from './prisma';
+import pool from './db';
 import { authenticateToken } from './middleware/authMiddleware';
 
 const noteRouter = Router();
@@ -16,12 +16,10 @@ noteRouter.get('/', async (req, res) => {
 	}
 
 	try {
-		const notes = await prisma.note.findMany({
-			where: { userId: email },
-			orderBy: { updatedAt: 'desc' },
-		});
-		res.json(notes);
+		const result = await pool.query('SELECT * FROM "Note" WHERE "userId" = $1 ORDER BY "updatedAt" DESC', [email]);
+		res.json(result.rows);
 	} catch (error) {
+		console.error('Error fetching notes:', error);
 		res.status(500).json({ error: 'Failed to fetch notes' });
 	}
 });
@@ -37,24 +35,17 @@ noteRouter.post('/', async (req, res) => {
 
 	try {
 		// Ensure user exists
-		await prisma.user.upsert({
-			where: { email },
-			update: {},
-			create: {
-				email,
-				name: name || 'Unknown',
-			},
-		});
+		await pool.query(
+			'INSERT INTO "User" ("email", "name") VALUES ($1, $2) ON CONFLICT ("email") DO UPDATE SET "name" = COALESCE($2, "User"."name")',
+			[email, name || 'Unknown']
+		);
 
-		const note = await prisma.note.create({
-			data: {
-				id,
-				title,
-				content: content || '',
-				userId: email,
-			},
-		});
-		res.json(note);
+		const result = await pool.query(
+			'INSERT INTO "Note" ("id", "title", "content", "userId", "updatedAt") VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
+			[id, title, content || '', email]
+		);
+
+		res.json(result.rows[0]);
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: 'Failed to create note' });
@@ -67,15 +58,13 @@ noteRouter.put('/:id', async (req, res) => {
 	const { title, content } = req.body;
 
 	try {
-		const note = await prisma.note.update({
-			where: { id },
-			data: {
-				title,
-				content,
-			},
-		});
-		res.json(note);
+		const result = await pool.query(
+			'UPDATE "Note" SET "title" = $1, "content" = $2, "updatedAt" = NOW() WHERE "id" = $3 RETURNING *',
+			[title, content, id]
+		);
+		res.json(result.rows[0]);
 	} catch (error) {
+		console.error('Error updating note:', error);
 		res.status(500).json({ error: 'Failed to update note' });
 	}
 });
@@ -85,11 +74,10 @@ noteRouter.delete('/:id', async (req, res) => {
 	const { id } = req.params;
 
 	try {
-		await prisma.note.delete({
-			where: { id },
-		});
+		await pool.query('DELETE FROM "Note" WHERE "id" = $1', [id]);
 		res.json({ message: 'Note deleted' });
 	} catch (error) {
+		console.error('Error deleting note:', error);
 		res.status(500).json({ error: 'Failed to delete note' });
 	}
 });
