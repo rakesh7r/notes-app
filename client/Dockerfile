@@ -3,10 +3,12 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install
+RUN npm install -g pnpm serve && pnpm install
 
 COPY . .
 
+RUN pnpm run build
+
 EXPOSE 3000
 
-CMD ["pnpm", "dev"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
