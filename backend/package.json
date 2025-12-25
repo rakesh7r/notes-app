@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "nodemon",
 		"devv": "ts-node src/index.ts",
-		"build": "tsc",
+		"build": "tsc && cp src/db/schema.sql dist/src/db/",
 		"start": "node dist/src/index.js",
 		"test": "vitest"
 	},

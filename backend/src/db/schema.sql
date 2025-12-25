@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS "User" (
+    "email" VARCHAR(255) PRIMARY KEY,
+    "name" VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS "Note" (
+    "id" VARCHAR(255) PRIMARY KEY,
+    "title" TEXT NOT NULL,
+    "content" TEXT,
+    "userId" VARCHAR(255) REFERENCES "User"("email") ON DELETE CASCADE,
+    "updatedAt" TIMESTAMP DEFAULT NOW()
+);
